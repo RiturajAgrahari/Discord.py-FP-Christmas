@@ -83,7 +83,7 @@ async def on_message(message):
         user_message = str(message.content)
         channel = str(message.channel.name)
         guild_name = message.guild.name
-        print(f'[channel: {channel}] --> {username}: {user_message}')
+        # print(f'[channel: {channel}] --> {username}: {user_message}')
 
         if message.author.mention in permitted_users:
             if user_message == "tommy!":
