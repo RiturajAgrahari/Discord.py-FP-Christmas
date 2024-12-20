@@ -6,6 +6,7 @@ import discord
 from discord import app_commands
 from discord.errors import Forbidden
 from dotenv import load_dotenv
+from datetime import timezone, datetime, UTC
 
 from ui import WishlistHyperlinks, christmas_response_embed
 from models import Profile, ChristmasResponseEvent
@@ -93,11 +94,13 @@ async def on_message(message):
                 # await config_bot(message, luck, client)
                 pass
 
+        # 10:00 AM, Dec 26, 2024 UTC event termination time.
+        termination_time = datetime(year=2024, month=12, day=26, hour=10, minute=0, second=0, microsecond=0, tzinfo=UTC)
         if int(message.channel.id) in [
             1318902086901039104,  # [FragPunk] christmas-blessings
             1318866950679433286,  # [FragPunk] christmas-blessings-test
-            1199253624350576692   # [Zirconcia] rpg
-        ]:
+            1199253624350576692   # [Zirconica] rpg
+        ] and datetime.now(timezone.utc) < termination_time:
             if "merry christmas" in str(user_message).lower():
                 try:
                     user = await Profile.get_or_none(discord_id=str(message.author.mention))
