@@ -93,31 +93,36 @@ async def on_message(message):
                 # await config_bot(message, luck, client)
                 pass
 
-        if "merry christmas" in str(user_message).lower():
-            try:
-                user = await Profile.get_or_none(discord_id=str(message.author.mention))
-                if not user:
-                    u = Profile(
-                        discord_id=str(message.author.mention),
-                        discord_name=str(message.author.name)
+        if int(message.channel.id) in [
+            1318902086901039104,  # [FragPunk] christmas-blessings
+            1318866950679433286,  # [FragPunk] christmas-blessings-test
+            1199253624350576692   # [Zirconcia] rpg
+        ]:
+            if "merry christmas" in str(user_message).lower():
+                try:
+                    user = await Profile.get_or_none(discord_id=str(message.author.mention))
+                    if not user:
+                        u = Profile(
+                            discord_id=str(message.author.mention),
+                            discord_name=str(message.author.name)
+                        )
+                        await u.save()
+                        user = u
+
+                    random_character = random.choice(list(CHARACTER.keys()))
+                    embed = await christmas_response_embed(random_character)
+                    view = WishlistHyperlinks()
+                    event_data = ChristmasResponseEvent(
+                        user_id=user,
+                        hero_name=random_character,
                     )
-                    await u.save()
-                    user = u
+                    await event_data.save()
+                    await message.reply(embed=embed, view=view)
 
-                random_character = random.choice(list(CHARACTER.keys()))
-                embed = await christmas_response_embed(random_character)
-                view = WishlistHyperlinks()
-                event_data = ChristmasResponseEvent(
-                    user_id=user,
-                    hero_name=random_character,
-                )
-                await event_data.save()
-                await message.reply(embed=embed, view=view)
-
-            except Exception as e:
-                print(e)
-                response = random.choice(responses)
-                await message.reply(response)
+                except Exception as e:
+                    print(e)
+                    response = random.choice(responses)
+                    await message.reply(response)
 
 
 async def send_error(file, function_name, error, server='FragPunk'):
