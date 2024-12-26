@@ -13,6 +13,7 @@ from models import Profile, ChristmasResponseEvent
 from db import db_init
 
 from constant import CHARACTER
+from config import get_data
 
 
 # LOADING ENV
@@ -89,6 +90,11 @@ async def on_message(message):
         if message.author.mention in permitted_users:
             if user_message == "tommy!":
                 await message.reply(content="wuff wuff!")
+
+            elif user_message == "$get-data":
+                await get_data()
+                user = await client.fetch_user(568179896459722753)
+                await user.send('> Here is your data!', file=discord.File("data.txt"))
 
             elif user_message == "$config":
                 # await config_bot(message, luck, client)
