@@ -12,8 +12,9 @@ from ui import WishlistHyperlinks, christmas_response_embed
 from models import Profile, ChristmasResponseEvent
 from db import db_init
 
-from constant import CHARACTER
-from config import get_data
+from constant import CHARACTER, PERMITTED_USERS, ERROR_RESPONSES
+from config import get_data, x_config_bot
+from helper import send_error
 
 
 # LOADING ENV
@@ -25,15 +26,6 @@ MY_GUILD = int(os.getenv("MY_GUILD"))
 TEST_GUILD = int(os.getenv("TEST_GUILD"))
 MAIN_GUILD = int(os.getenv("MAIN_GUILD"))
 guilds = [MY_GUILD, TEST_GUILD, MAIN_GUILD]
-
-permitted_users = ['<@568179896459722753>']
-
-responses = [
-    "_magic 🪄... try the command again </hero:1302652188148891690>_",
-    "_ghost came into the way 👻... try the command again </hero:1302652188148891690>_",
-    "_ uf! high traffic  🚦... try the command again </hero:1302652188148891690>_",
-    "_ is this your parcel?  📦... try the command again </hero:1302652188148891690>_"
-]
 
 
 class MyClient(discord.Client):
@@ -87,7 +79,7 @@ async def on_message(message):
         guild_name = message.guild.name
         # print(f'[channel: {channel}] --> {username}: {user_message}')
 
-        if message.author.mention in permitted_users:
+        if message.author.mention in PERMITTED_USERS:
             if user_message == "tommy!":
                 await message.reply(content="wuff wuff!")
 
@@ -96,9 +88,8 @@ async def on_message(message):
                 user = await client.fetch_user(568179896459722753)
                 await user.send('> Here is your data!', file=discord.File("data.txt"))
 
-            elif user_message == "$config":
-                # await config_bot(message, luck, client)
-                pass
+            elif user_message == "$config-fp":
+                await x_config_bot(message, client)
 
         # 10:00 AM, Dec 26, 2024 UTC event termination time.
         termination_time = datetime(year=2024, month=12, day=26, hour=10, minute=0, second=0, microsecond=0, tzinfo=UTC)
@@ -130,15 +121,13 @@ async def on_message(message):
 
                 except Exception as e:
                     print(e)
-                    response = random.choice(responses)
+                    response = random.choice(ERROR_RESPONSES)
                     await message.reply(response)
 
 
-async def send_error(file, function_name, error, server='FragPunk'):
-    embed = discord.Embed(title=f'{server} Server', description=file, color=discord.Color.red())
-    embed.add_field(name=function_name, value=error, inline=False)
-    user = await client.fetch_user(568179896459722753)
-    await user.send(embed=embed)
+@client.tree.command(name='draw', description='draw and collect the cards')
+async def draw_card_event(interaction: discord.Interaction):
+    ...
 
 
 @client.event
@@ -146,7 +135,7 @@ async def on_error(event, *args, **kwargs):
     error = str(sys.exc_info())
     error = error.replace(',', '\n')
     # error_logger.error(error)
-    await send_error(__file__, event, error)
+    await send_error(__file__, event, error, client)
 
 
 client.run(token=os.getenv("TOKEN"))
