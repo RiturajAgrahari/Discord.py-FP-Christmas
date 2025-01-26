@@ -1,5 +1,19 @@
 import discord
 
+
+OFFICIAL_IMAGE = "https://pbs.twimg.com/profile_images/1853287937284489216/VcKq8D5I_400x400.jpg"
+
+PERMITTED_USERS = ['<@568179896459722753>', '<@1265258448694542357>']
+
+ME = 568179896459722753
+
+ERROR_RESPONSES = [
+    "_magic 🪄... try the command again </hero:1302652188148891690>_",
+    "_ghost came into the way 👻... try the command again </hero:1302652188148891690>_",
+    "_ uf! high traffic  🚦... try the command again </hero:1302652188148891690>_",
+    "_ is this your parcel?  📦... try the command again </hero:1302652188148891690>_"
+]
+
 CHARACTER = {
     "Spider": {
         "message": "Christmas, a day to give... but I'm still the greatest gift here.",
