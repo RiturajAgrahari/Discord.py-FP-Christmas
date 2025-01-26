@@ -102,7 +102,7 @@ async def card_event_configuration(main_interaction: discord.Interaction, client
         async def import_data(self, interaction: discord.Interaction, button: discord.ui.Button):
             pass
 
-        @discord.ui.button(label=f'Export', style=discord.ButtonStyle.green)
+        @discord.ui.button(label=f'Export', style=discord.ButtonStyle.green, disabled=True)
         async def export_data(self, interaction: discord.Interaction, button: discord.ui.Button):
             pass
 
