@@ -14,7 +14,9 @@ from db import db_init
 
 from constant import CHARACTER, PERMITTED_USERS, ERROR_RESPONSES
 from config import get_data, x_config_bot
-from helper import send_error
+from helper import send_error, check_profile
+
+from cardEvent import get_card, get_card_collection
 
 
 # LOADING ENV
@@ -127,7 +129,14 @@ async def on_message(message):
 
 @client.tree.command(name='draw', description='draw and collect the cards')
 async def draw_card_event(interaction: discord.Interaction):
-    ...
+    user = await check_profile(interaction.user.mention, interaction.user.name)
+    await get_card(interaction, client, user)
+
+
+@client.tree.command(name='collection', description='Check all the cards you have')
+async def check_card_collections(interaction: discord.Interaction):
+    user = await check_profile(interaction.user.mention, interaction.user.name)
+    await get_card_collection(interaction, client, user)
 
 
 @client.event
