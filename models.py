@@ -36,7 +36,13 @@ class Card(Model):
     description = fields.TextField()
     image = fields.CharField(max_length=225)
     # User who got the card
-    user = fields.ManyToManyField("models.Profile", related_name="cards", on_delete=fields.CASCADE)
+    user = fields.ManyToManyField("models.Profile", through="CardCollection",  related_name="cards",
+                                  on_delete=fields.CASCADE)
+
+
+class CardCollection(Model):
+    user = fields.ForeignKeyField("models.Profile", related_name="collection")
+    card = fields.ForeignKeyField("models.Card", related_name="collection")
 
 
 # CHRISTMAS EVENT MODEL
