@@ -1,10 +1,51 @@
 import discord
+import random
+
 from discord import ui, Interaction
 from discord._types import ClientT
 from discord.errors import HTTPException
 
-from models import Card
-from constant import  OFFICIAL_IMAGE
+from models import Card, Profile, CardCollection
+from constant import OFFICIAL_IMAGE, ERROR_RESPONSES
+from helper import send_error
+
+
+"""
+EVENT : EVENT FUNCTIONS 
+"""
+
+
+async def get_card(main_interaction: discord.Interaction, client: discord.Client, user: Profile):
+    cards = await Card.all()
+    if not cards:
+        error = 'There is no cards in database, please check it as it is required to use the bot.!!'
+        await send_error(__file__, get_card.__name__, error, client)
+        response = random.choice(ERROR_RESPONSES)
+        await main_interaction.response.send_message(content=f'{response}', ephemeral=True)
+
+    else:
+        random_card = random.choice(cards)
+        embed = await card_embed(random_card)
+        await main_interaction.response.send_message(embed=embed)
+        print("adding a card")
+        collection = CardCollection(user=user, card=random_card)
+        await collection.save()
+        print("card added")
+
+
+async def get_card_collection(main_interaction: discord.Interaction, client: discord.Client, user: Profile):
+    cards = await user.collection.all()
+
+    embed = discord.Embed(
+        title=f'{main_interaction.user.name} Cards',
+        description=f'You have total {len(cards)} cards.',
+        color=discord.Color.dark_gray()
+    )
+    embed.set_footer(text='FragPunk - Coming Mar 6, 2025 (PST)', icon_url=OFFICIAL_IMAGE)
+
+    # embed.set_image(url=card.image)
+    await main_interaction.response.send_message(embed=embed, ephemeral=True)
+
 
 """
 UI : CARD UI COMPONENTS
