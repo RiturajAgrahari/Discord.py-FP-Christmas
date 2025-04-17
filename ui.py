@@ -1,4 +1,5 @@
 import discord
+import random
 from constant import CHARACTER
 
 
@@ -54,6 +55,7 @@ async def easter_response_embed(random_character):
         description=random_message if random_message else '',
         color=CHARACTER[random_character]["color"],
     )
+    embed.set_image(url=CHARACTER[random_character]["sticker"] if CHARACTER[random_character].get("sticker") else '')
 
     embed.set_thumbnail(
         url=CHARACTER[random_character]["image"])
