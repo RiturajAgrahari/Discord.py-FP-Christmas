@@ -44,3 +44,21 @@ async def christmas_response_embed(random_character):
                  "fb6063abd4e&"
     )
     return embed
+
+
+async def easter_response_embed(random_character):
+    random_message = CHARACTER[random_character]["easter_response"]
+
+    embed = discord.Embed(
+        title=f"From {random_character}",
+        description=random_message if random_message else '',
+        color=CHARACTER[random_character]["color"],
+    )
+
+    embed.set_thumbnail(
+        url=CHARACTER[random_character]["image"])
+    embed.set_footer(
+        text="FragPunk",
+        icon_url="https://cdn.discordapp.com/attachments/1318864196137648128/1362388544529895707/1744889125967.jpg?ex=680236b4&is=6800e534&hm=64b8a0882a658fd13d9f447a9e43303fbd9b94e3edb5627b07ac225f1261e3a8&"
+    )
+    return embed

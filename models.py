@@ -53,4 +53,12 @@ class ChristmasResponseEvent(Model):
     used_on = fields.DatetimeField(auto_now_add=True)
 
 
+# EASTER EVENT MODEL
+class EasterResponseEvent(Model):
+    id = fields.IntField(primary_key=True)
+    user_id = fields.ForeignKeyField("models.Profile", on_delete=fields.CASCADE)
+    hero_name = fields.CharField(max_length=100)
+    used_on = fields.DatetimeField(auto_now_add=True)
+
+
 

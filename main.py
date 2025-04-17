@@ -8,8 +8,8 @@ from discord.errors import Forbidden
 from dotenv import load_dotenv
 from datetime import timezone, datetime, UTC
 
-from ui import WishlistHyperlinks, christmas_response_embed
-from models import Profile, ChristmasResponseEvent
+from ui import WishlistHyperlinks, christmas_response_embed, easter_response_embed
+from models import Profile, ChristmasResponseEvent, EasterResponseEvent
 from db import db_init
 
 from constant import CHARACTER, PERMITTED_USERS, ERROR_RESPONSES
@@ -120,6 +120,41 @@ async def on_message(message):
                     )
                     await event_data.save()
                     await message.reply(embed=embed, view=view)
+
+                except Exception as e:
+                    print(e)
+                    response = random.choice(ERROR_RESPONSES)
+                    await message.reply(response)
+
+        # EASTER
+        # 10:00 AM, Dec 26, 2024 UTC event termination time.
+        easter_start_time = datetime(year=2025, month=4, day=25, hour=6, minute=0, second=0, microsecond=0, tzinfo=UTC)
+        easter_termination_time = datetime(year=2025, month=4, day=20, hour=6, minute=0, second=0, microsecond=0, tzinfo=UTC)
+        if int(message.channel.id) in [
+            1362364961665319013,  # [FragPunk] easter
+            1362367275990122506,  # [FragPunk] easter-test
+            1322857039847882853   # [1322857039847882853] Fragpunk
+        ] and easter_termination_time > datetime.now(timezone.utc): # > easter_start_time:
+            if "happy easter" in str(user_message).lower():
+                try:
+                    user = await Profile.get_or_none(discord_id=str(message.author.mention))
+                    if not user:
+                        u = Profile(
+                            discord_id=str(message.author.mention),
+                            discord_name=str(message.author.name)
+                        )
+                        await u.save()
+                        user = u
+
+                    random_character = random.choice(list(CHARACTER.keys()))
+                    embed = await easter_response_embed(random_character)
+                    # view = WishlistHyperlinks()
+                    event_data = EasterResponseEvent(
+                        user_id=user,
+                        hero_name=random_character,
+                    )
+                    await event_data.save()
+                    await message.reply(embed=embed)
 
                 except Exception as e:
                     print(e)
