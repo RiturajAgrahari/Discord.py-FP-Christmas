@@ -128,8 +128,8 @@ async def on_message(message):
 
         # EASTER
         # 10:00 AM, Dec 26, 2024 UTC event termination time.
-        easter_start_time = datetime(year=2025, month=4, day=25, hour=6, minute=0, second=0, microsecond=0, tzinfo=UTC)
-        easter_termination_time = datetime(year=2025, month=4, day=20, hour=6, minute=0, second=0, microsecond=0, tzinfo=UTC)
+        easter_start_time = datetime(year=2025, month=4, day=20, hour=6, minute=0, second=0, microsecond=0, tzinfo=UTC)
+        easter_termination_time = datetime(year=2025, month=4, day=25, hour=6, minute=0, second=0, microsecond=0, tzinfo=UTC)
         if int(message.channel.id) in [
             1362364961665319013,  # [FragPunk] easter
             1362367275990122506,  # [FragPunk] easter-test
